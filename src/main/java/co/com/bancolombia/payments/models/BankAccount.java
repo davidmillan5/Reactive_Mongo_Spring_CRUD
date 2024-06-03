@@ -28,8 +28,10 @@ public class BankAccount {
 
     private double balance;
 
+    @DBRef
     private User user;
 
+    @DBRef
     private List<Transaction> transactions;
 
     public BankAccount() {

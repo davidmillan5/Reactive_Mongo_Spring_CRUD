@@ -22,8 +22,8 @@ public class TransactionService {
     public Mono<Transaction> createTransaction(Mono<Transaction> transactionMono) {
         return transactionMono
                 .flatMap(transaction -> {
-                    if (transaction.getAmount() <= 0 || transaction.getType() == null || transaction.getType().isBlank() || transaction.getBankAccount() == null) {
-                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, HTTP400));
+                    if (transaction.getAmount() <= 0 || transaction.getType() == null || transaction.getBankAccount() == null) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid transaction data"));
                     }
                     return transactionRepository.save(transaction);
                 })
@@ -36,23 +36,25 @@ public class TransactionService {
                 .onErrorResume(e -> Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error getting transaction", e)));
     }
 
+
     public Mono<Transaction> updateTransaction(String id, Mono<Transaction> transactionMono) {
         return transactionRepository.findById(id)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, HTTP404)))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found")))
                 .flatMap(existingTransaction ->
                         transactionMono.flatMap(transaction -> {
-                            if (transaction.getAmount() <= 0 || transaction.getType() == null || transaction.getType().isBlank() || transaction.getBankAccount() == null) {
-                                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, HTTP400));
+                            if (transaction.getAmount() <= 0 || transaction.getType() == null || transaction.getBankAccount() == null) {
+                                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid transaction data"));
                             }
                             existingTransaction.setAmount(transaction.getAmount());
                             existingTransaction.setType(transaction.getType());
-                            existingTransaction.setData(transaction.getData());
+                            existingTransaction.setDate(transaction.getDate());
                             existingTransaction.setBankAccount(transaction.getBankAccount());
                             return transactionRepository.save(existingTransaction);
                         })
                 )
                 .onErrorResume(e -> Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating transaction", e)));
     }
+
 
     public Mono<Void> deleteTransaction(String id) {
         return transactionRepository.findById(id)

@@ -1,5 +1,6 @@
 package co.com.bancolombia.payments.services;
 
+import co.com.bancolombia.payments.models.BankAccount;
 import co.com.bancolombia.payments.models.User;
 import co.com.bancolombia.payments.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -62,4 +63,5 @@ public class UserService {
                 .flatMap(userRepository::delete)
                 .onErrorResume(e -> Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error deleting user", e)));
     }
+
 }
