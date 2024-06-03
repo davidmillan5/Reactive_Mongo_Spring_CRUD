@@ -4,19 +4,39 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Date;
+
 public class Transaction {
+
+    public enum TransactionType {
+        DEPOSIT,
+        WITHDRAWAL
+    }
+
+
     @Id
     private String id;
 
     @Field
     private double amount;
     @Field
-    private String type; // deposit / withdrawal
+    private TransactionType type;
     @Field
-    private String data;
+    private Date date;
 
     @DBRef
     private BankAccount bankAccount;
+
+    public Transaction() {
+    }
+
+    public Transaction(String id, double amount, TransactionType type, Date date, BankAccount bankAccount) {
+        this.id = id;
+        this.amount = amount;
+        this.type = type;
+        this.date = date;
+        this.bankAccount = bankAccount;
+    }
 
     public String getId() {
         return id;
@@ -34,20 +54,20 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
-    public String getData() {
-        return data;
+    public Date getDate() {
+        return date;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public BankAccount getBankAccount() {
@@ -63,12 +83,9 @@ public class Transaction {
         return "Transaction{" +
                 "id='" + id + '\'' +
                 ", amount=" + amount +
-                ", type='" + type + '\'' +
-                ", data='" + data + '\'' +
+                ", type=" + type +
+                ", date=" + date +
                 ", bankAccount=" + bankAccount +
                 '}';
-    }
-
-    public Transaction() {
     }
 }

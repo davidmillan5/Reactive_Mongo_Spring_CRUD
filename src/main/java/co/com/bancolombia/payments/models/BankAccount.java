@@ -10,20 +10,38 @@ import java.util.List;
 @Document
 public class BankAccount {
 
+    public enum AccountType {
+        SAVINGS,
+        CHECKING,
+        MONEY,
+        SALARY,
+        CURRENCY,
+        STUDENTS,
+        CDS
+    }
+
     @Id
     private String id;
 
-    @Field
-    private String accountNumber;
-    @Field
+    @Field("account_type")
+    private AccountType accountType;
+
     private double balance;
 
-    @DBRef
     private User user;
 
-    @DBRef
     private List<Transaction> transactions;
 
+    public BankAccount() {
+    }
+
+    public BankAccount(String id, AccountType accountType, double balance, User user, List<Transaction> transactions) {
+        this.id = id;
+        this.accountType = accountType;
+        this.balance = balance;
+        this.user = user;
+        this.transactions = transactions;
+    }
 
     public String getId() {
         return id;
@@ -33,12 +51,12 @@ public class BankAccount {
         this.id = id;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public AccountType getAccountType() {
+        return accountType;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 
     public double getBalance() {
@@ -69,14 +87,10 @@ public class BankAccount {
     public String toString() {
         return "BankAccount{" +
                 "id='" + id + '\'' +
-                ", accountNumber='" + accountNumber + '\'' +
+                ", accountType=" + accountType +
                 ", balance=" + balance +
                 ", user=" + user +
                 ", transactions=" + transactions +
                 '}';
-    }
-
-
-    public BankAccount() {
     }
 }
